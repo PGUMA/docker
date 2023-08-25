@@ -13,10 +13,25 @@ services:
       - ${POSTGRES_PORT:-5432}:5432
   pgweb:
     image: sosedoff/pgweb
-    container_name: "pgweb"
+    container_name: pgweb
     ports:
-      - "8080:8081"
+      - 8080:8081
     environment:
       PGWEB_DATABASE_URL: ${PGWEB_DATABASE_URL:-}
     depends_on:
       - db
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - 8081:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_MAIL:-example@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-password}
+    volumes:
+      - volume_pgadmin:/var/lib/pgadmin
+    depends_on:
+      - db
+volumes:
+  volume_pgadmin:
+    name: pgadmin-data
